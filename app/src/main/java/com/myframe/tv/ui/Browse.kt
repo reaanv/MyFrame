@@ -102,6 +102,14 @@ fun HomeScreen() {
     val memory = rememberFocusMemory("art")
     var focused by rememberSaveable { mutableIntStateOf(0) }
     var notice by remember { mutableStateOf<String?>(null) }
+    var missing by remember { mutableStateOf<Apps.Missing?>(null) }
+    // Re-check which media apps are installed whenever we come back (for example from the Play Store).
+    var appsCheck by remember { mutableIntStateOf(0) }
+    androidx.lifecycle.compose.LifecycleResumeEffect(Unit) { appsCheck++; onPauseOrDispose { } }
+    val hasYouTube = remember(appsCheck) { Apps.youTubeInstalled(context) }
+    val hasSpotify = remember(appsCheck) { Apps.spotifyInstalled(context) }
+    val hasYtMusic = remember(appsCheck) { Apps.youTubeMusicInstalled(context) }
+    val getIt = "Not installed. Press OK to get it from the Play Store."
     val featured = remember(art.size) { art.randomOrNull() }
     val time by produceState("") {
         while (true) {
@@ -115,20 +123,35 @@ fun HomeScreen() {
         Tile("photos", "My Photos", if (photos.isEmpty()) "Your own pictures. Add some from your phone to begin." else "${photos.size} photographs from your own life.", Glyph.PHOTO, "Photos") { nav.go(Screen.Photos) },
         Tile("mixed", "Mixed Carousel", "Paintings and photographs together, in saved presets.", Glyph.MIX, "Mixed") { nav.go(Screen.Mixed) },
         Tile("collections", "Collections", "Albums and playlists you arrange yourself.", Glyph.STACK, "Albums") { nav.go(Screen.Collections) },
-        Tile("youtube", "YouTube", "Opens the YouTube app installed on this TV.", Glyph.PLAY) {
-            if (!Apps.launchYouTube(context)) notice = "YouTube is not installed on this device. Install it from the Play Store, then try again."
+        Tile("youtube", "YouTube", if (hasYouTube) "Opens the YouTube app installed on this TV." else getIt, Glyph.PLAY) {
+            if (!Apps.launchYouTube(context)) missing = Apps.YOUTUBE_STORE
         },
-        Tile("spotify", "Spotify", "Start music, then press Home to return to your pictures. Background playback depends on Spotify and the TV.", Glyph.NOTE) {
-            if (!Apps.launchSpotify(context)) notice = "Spotify is not installed on this device. Install it from the Play Store, then try again."
+        Tile("spotify", "Spotify", if (hasSpotify) "Start music, then press Home to return to your pictures. Background playback depends on Spotify and the TV." else getIt, Glyph.NOTE) {
+            if (!Apps.launchSpotify(context)) missing = Apps.SPOTIFY_STORE
         },
-        Tile("ytmusic", "YouTube Music", "Opens YouTube Music, or YouTube's Music menu. TV playback may stop when you return to art.", Glyph.NOTE, "YT Music") {
-            if (!Apps.launchYouTubeMusic(context)) notice = "Install YouTube from the TV's Play Store to use YouTube Music."
+        Tile("ytmusic", "YouTube Music", if (hasYtMusic) "Opens YouTube Music, or YouTube's Music menu. TV playback may stop when you return to art." else "YouTube Music runs inside the YouTube app on TV. YouTube is not installed. Press OK to get it from the Play Store.", Glyph.NOTE, "YT Music") {
+            // On TV, YouTube Music is reached through YouTube when it has no app of its own.
+            if (!Apps.launchYouTubeMusic(context)) missing = Apps.Missing("YouTube (needed for YouTube Music)", Apps.YOUTUBE_STORE.storePackage)
         },
         Tile("apps", "All Apps", "Everything else installed on this TV.", Glyph.GRID) { nav.go(Screen.Apps) },
         Tile("settings", "Settings", "Frames, slideshow, phone upload and startup.", Glyph.GEAR) { nav.go(Screen.Settings) },
     )
     val current = tiles[focused.coerceIn(0, tiles.lastIndex)]
     val backdrop = if (current.key == "photos" && photos.isNotEmpty()) photos.first() else featured
+
+    missing?.let { app ->
+        ConfirmDialog(
+            title = "${app.name} is not installed",
+            message = "MyFrame opens the real app but cannot include it. Install it from the Google Play Store, then come back and try again.",
+            confirmLabel = "Open Play Store",
+            onDismiss = { missing = null },
+        ) {
+            missing = null
+            if (!Apps.openStore(context, app.storePackage)) {
+                notice = "The Play Store could not be opened. Open it from your TV's home screen and search for ${app.name.substringBefore(" (")}."
+            }
+        }
+    }
 
     Box(Modifier.fillMaxSize().background(p.bg)) {
         Crossfade(backdrop, animationSpec = tween(700), label = "backdrop") { media ->

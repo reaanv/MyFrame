@@ -58,6 +58,33 @@ object Apps {
     private val SPOTIFY = listOf("com.spotify.tv.android", "com.spotify.music")
     private val YOUTUBE_MUSIC = listOf("com.google.android.youtube.tvmusic", "com.google.android.apps.youtube.music")
 
+    /** A media app the user asked for that is not installed, with the Play Store id to offer. */
+    data class Missing(val name: String, val storePackage: String)
+
+    val SPOTIFY_STORE = Missing("Spotify", "com.spotify.tv.android")
+    val YOUTUBE_STORE = Missing("YouTube", "com.google.android.youtube.tv")
+
+    fun isInstalled(context: Context, packages: List<String>): Boolean =
+        packages.any { runCatching { context.packageManager.getLaunchIntentForPackage(it) != null }.getOrDefault(false) }
+
+    fun spotifyInstalled(context: Context) = isInstalled(context, SPOTIFY)
+    fun youTubeInstalled(context: Context) = isInstalled(context, YOUTUBE)
+    /** YouTube Music works through its own TV app or, failing that, through YouTube. */
+    fun youTubeMusicInstalled(context: Context) = isInstalled(context, YOUTUBE_MUSIC + YOUTUBE)
+
+    /**
+     * Opens the app's Google Play page. MyFrame never installs or bundles other companies' apps:
+     * the Play Store does the download, signing and updates. Returns false when no store can be opened.
+     */
+    fun openStore(context: Context, storePackage: String): Boolean {
+        val uris = listOf("market://details?id=$storePackage", "https://play.google.com/store/apps/details?id=$storePackage")
+        return uris.any { uri ->
+            runCatching {
+                context.startActivity(Intent(Intent.ACTION_VIEW, android.net.Uri.parse(uri)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            }.isSuccess
+        }
+    }
+
     /** Opens the official YouTube app. Returns false when it is not installed. */
     fun launchYouTube(context: Context): Boolean = YOUTUBE.any { launch(context, it) }
 
