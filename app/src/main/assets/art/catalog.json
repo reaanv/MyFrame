@@ -1,0 +1,247 @@
+{
+  "version": 22,
+  "items": [
+    {
+      "file": "vangogh_wheat_field_cypresses.jpg",
+      "title": "Wheat Field with Cypresses",
+      "artist": "Vincent van Gogh",
+      "date": "1889",
+      "width": 1930,
+      "height": 1536,
+      "credit": "The Metropolitan Museum of Art — Purchase, The Annenberg Foundation Gift, 1993",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/436535"
+    },
+    {
+      "file": "vangogh_irises.jpg",
+      "title": "Irises",
+      "artist": "Vincent van Gogh",
+      "date": "1890",
+      "width": 1937,
+      "height": 1536,
+      "credit": "The Metropolitan Museum of Art — Gift of Adele R. Levy, 1958",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/436528"
+    },
+    {
+      "file": "bruegel_harvesters.jpg",
+      "title": "The Harvesters",
+      "artist": "Pieter Bruegel the Elder",
+      "date": "1565",
+      "width": 2048,
+      "height": 1510,
+      "credit": "The Metropolitan Museum of Art — Rogers Fund, 1919",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/435809"
+    },
+    {
+      "file": "degas_dance_class.jpg",
+      "title": "The Dance Class",
+      "artist": "Edgar Degas",
+      "date": "1874",
+      "width": 1425,
+      "height": 1536,
+      "credit": "The Metropolitan Museum of Art — Bequest of Mrs. Harry Payne Bingham, 1986",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/438817"
+    },
+    {
+      "file": "vermeer_water_pitcher.jpg",
+      "title": "Young Woman with a Water Pitcher",
+      "artist": "Johannes Vermeer",
+      "date": "ca. 1662",
+      "width": 1366,
+      "height": 1536,
+      "credit": "The Metropolitan Museum of Art — Marquand Collection, Gift of Henry G. Marquand, 1889",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/437881"
+    },
+    {
+      "file": "leutze_washington_delaware.jpg",
+      "title": "Washington Crossing the Delaware",
+      "artist": "Emanuel Leutze",
+      "date": "1851",
+      "width": 1937,
+      "height": 1135,
+      "credit": "The Metropolitan Museum of Art — Gift of John Stewart Kennedy, 1897",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/11417"
+    },
+    {
+      "file": "hokusai_great_wave.jpg",
+      "title": "Under the Wave off Kanagawa (Kanagawa oki nami ura), also known as The Great Wave, from the series Thirty-six Views of Mount Fuji (Fugaku sanjūrokkei)",
+      "artist": "Katsushika Hokusai",
+      "date": "ca. 1830–32",
+      "width": 2048,
+      "height": 1377,
+      "credit": "The Metropolitan Museum of Art — H. O. Havemeyer Collection, Bequest of Mrs. H. O. Havemeyer, 1929",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/45434"
+    },
+    {
+      "file": "homer_gulf_stream.jpg",
+      "title": "The Gulf Stream",
+      "artist": "Winslow Homer",
+      "date": "1899; reworked by 1906",
+      "width": 2048,
+      "height": 1264,
+      "credit": "The Metropolitan Museum of Art — Catharine Lorillard Wolfe Collection, Wolfe Fund, 1906",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/11122"
+    },
+    {
+      "file": "church_heart_of_the_andes.jpg",
+      "title": "Heart of the Andes",
+      "artist": "Frederic Edwin Church",
+      "date": "1859",
+      "width": 2048,
+      "height": 1128,
+      "credit": "The Metropolitan Museum of Art — Bequest of Margaret E. Dows, 1909",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/10481"
+    },
+    {
+      "file": "elgreco_view_of_toledo.jpg",
+      "title": "View of Toledo",
+      "artist": "El Greco (Domenikos Theotokopoulos)",
+      "date": "ca. 1599–1600",
+      "width": 1365,
+      "height": 1536,
+      "credit": "The Metropolitan Museum of Art — H. O. Havemeyer Collection, Bequest of Mrs. H. O. Havemeyer, 1929",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/436575"
+    },
+    {
+      "file": "vangogh_sunflowers.jpg",
+      "title": "Sunflowers",
+      "artist": "Vincent van Gogh",
+      "date": "1887",
+      "width": 2048,
+      "height": 1447,
+      "credit": "The Metropolitan Museum of Art — Rogers Fund, 1949",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/436524"
+    },
+    {
+      "file": "vangogh_straw_hat.jpg",
+      "title": "Self-Portrait with a Straw Hat (obverse: The Potato Peeler)",
+      "artist": "Vincent van Gogh",
+      "date": "1887",
+      "width": 1234,
+      "height": 1536,
+      "credit": "The Metropolitan Museum of Art — Bequest of Miss Adelaide Milton de Groot (1876-1967), 1967",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/436532"
+    },
+    {
+      "file": "sargent_madame_x.jpg",
+      "title": "Madame X (Virginie Amélie Avegno Gautreau)",
+      "artist": "John Singer Sargent",
+      "date": "1883–84",
+      "width": 897,
+      "height": 1536,
+      "credit": "The Metropolitan Museum of Art — Arthur Hoppock Hearn Fund, 1916",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/12127"
+    },
+    {
+      "file": "bierstadt_rocky_mountains.jpg",
+      "title": "The Rocky Mountains, Lander's Peak",
+      "artist": "Albert Bierstadt",
+      "date": "1863",
+      "width": 2048,
+      "height": 1227,
+      "credit": "The Metropolitan Museum of Art — Rogers Fund, 1907",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/10154"
+    },
+    {
+      "file": "pissarro_boulevard_montmartre.jpg",
+      "title": "The Boulevard Montmartre on a Winter Morning",
+      "artist": "Camille Pissarro",
+      "date": "1897",
+      "width": 1902,
+      "height": 1536,
+      "credit": "The Metropolitan Museum of Art — Gift of Katrin S. Vietor, in loving memory of Ernest G. Vietor, 1960",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/437310"
+    },
+    {
+      "file": "vangogh_cypresses.jpg",
+      "title": "Cypresses",
+      "artist": "Vincent van Gogh",
+      "date": "1889",
+      "width": 1218,
+      "height": 1536,
+      "credit": "The Metropolitan Museum of Art — Rogers Fund, 1949",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/437980"
+    },
+    {
+      "file": "cezanne_card_players.jpg",
+      "title": "The Card Players",
+      "artist": "Paul Cézanne",
+      "date": "1890–92",
+      "width": 1929,
+      "height": 1536,
+      "credit": "The Metropolitan Museum of Art — Bequest of Stephen C. Clark, 1960",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/435868"
+    },
+    {
+      "file": "david_death_of_socrates.jpg",
+      "title": "The Death of Socrates",
+      "artist": "Jacques Louis David",
+      "date": "1787",
+      "width": 2048,
+      "height": 1363,
+      "credit": "The Metropolitan Museum of Art — Catharine Lorillard Wolfe Collection, Wolfe Fund, 1931",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/436105"
+    },
+    {
+      "file": "cole_oxbow.jpg",
+      "title": "View from Mount Holyoke, Northampton, Massachusetts, after a Thunderstorm—The Oxbow",
+      "artist": "Thomas Cole",
+      "date": "1836",
+      "width": 2048,
+      "height": 1399,
+      "credit": "The Metropolitan Museum of Art — Gift of Mrs. Russell Sage, 1908",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/10497"
+    },
+    {
+      "file": "cezanne_mont_sainte_victoire.jpg",
+      "title": "Mont Sainte-Victoire and the Viaduct of the Arc River Valley",
+      "artist": "Paul Cézanne",
+      "date": "1882–85",
+      "width": 1905,
+      "height": 1536,
+      "credit": "The Metropolitan Museum of Art — H. O. Havemeyer Collection, Bequest of Mrs. H. O. Havemeyer, 1929",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/435877"
+    },
+    {
+      "file": "manet_boating.jpg",
+      "title": "Boating",
+      "artist": "Edouard Manet",
+      "date": "1874",
+      "width": 2013,
+      "height": 1536,
+      "credit": "The Metropolitan Museum of Art — H. O. Havemeyer Collection, Bequest of Mrs. H. O. Havemeyer, 1929",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/436947"
+    },
+    {
+      "file": "rembrandt_aristotle.jpg",
+      "title": "Aristotle with a Bust of Homer",
+      "artist": "Rembrandt (Rembrandt van Rijn)",
+      "date": "1653",
+      "width": 1456,
+      "height": 1536,
+      "credit": "The Metropolitan Museum of Art — Purchase, special contributions and funds given or bequeathed by friends of the Museum, 1961",
+      "license": "CC0 Public Domain (Met Open Access)",
+      "source": "https://www.metmuseum.org/art/collection/search/437394"
+    }
+  ]
+}

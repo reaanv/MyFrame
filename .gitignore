@@ -1,0 +1,32 @@
+# Build output
+.gradle/
+build/
+.kotlin/
+captures/
+*.iml
+.idea/
+local.properties
+
+# Signing keys and credentials: never commit
+*.keystore
+*.jks
+keystore.properties
+google-oauth.json
+.env
+.env.*
+
+# APKs are published as GitHub Release assets, not committed
+dist/
+*.apk
+
+# Personal or generated test media
+/tools/test-photos/
+
+# Local tooling state
+.gstack/
+.agent-bus/
+.remember/
+.vercel/
+tools/.appliance/
+CODEX_ERRORS.md
+.serena/

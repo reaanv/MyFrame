@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MyFrame: art and photo frame for Android TV</title>
+<meta name="description" content="MyFrame turns a Xiaomi Android TV or Google TV stick into an art and photo frame. Free Android app with a signed APK download and a setup guide.">
+<meta name="theme-color" content="#0e0d0c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230e0d0c'/%3E%3Crect x='5' y='8' width='22' height='16' fill='none' stroke='%23c8a96a' stroke-width='2.5'/%3E%3Crect x='10' y='12.5' width='12' height='7' fill='none' stroke='%23c8a96a' stroke-width='1.5'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="#top" aria-label="MyFrame, top of page">
+      <svg viewBox="0 0 32 24" width="28" height="21" aria-hidden="true"><rect x="1.5" y="1.5" width="29" height="21" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="8" y="7" width="16" height="10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      <span>MyFrame</span>
+    </a>
+    <nav aria-label="Sections">
+      <a href="#download">Download</a>
+      <a href="#setup">Setup</a>
+      <a href="#phone-upload">Phone upload</a>
+      <a href="#limits">Limits</a>
+      <a href="#help">Help</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Android TV · Google TV</p>
+      <h1>MyFrame</h1>
+      <p class="lede">Turn a Xiaomi Android TV stick into an art and photo frame.</p>
+      <div class="actions">
+        <a class="btn" href="https://github.com/reaanv/MyFrame/releases/latest/download/MyFrame.apk">Download MyFrame 1.1.0 (APK)</a>
+        <a class="link" href="https://github.com/reaanv/MyFrame">Source on GitHub</a>
+      </div>
+      <p class="note">Android TV / Google TV, Android 8 or newer. About 15 MB. Free, no ads, no account.</p>
+    </div>
+    <figure class="shot">
+      <img src="img/home.webp" width="1280" height="720" alt="MyFrame home screen on a TV: a painting behind tiles for Art Mode, Photos, Mixed, Albums, YouTube, Spotify, YT Music, All Apps and Settings">
+    </figure>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <h2>What it does</h2>
+    <div class="cards">
+      <article class="card">
+        <img src="img/art-viewer.webp" width="1280" height="720" loading="lazy" alt="Van Gogh's Irises shown in a black frame with a cream mount">
+        <h3>Art Mode</h3>
+        <p>22 public-domain paintings from The Met, shown in frames and mounts. More paintings arrive over Wi-Fi.</p>
+      </article>
+      <article class="card">
+        <img src="img/select-photos.webp" width="1280" height="720" loading="lazy" alt="My Photos screen with a grid of pictures and three of them selected">
+        <h3>My Photos</h3>
+        <p>Your own pictures: albums, favourites, a hand-picked set or a slideshow.</p>
+      </article>
+      <article class="card">
+        <img src="img/frame-editor.webp" width="1280" height="720" loading="lazy" alt="The editor for choosing a frame style and mount">
+        <h3>Mixed</h3>
+        <p>Paintings and photos together, saved as presets with their own frame and timing.</p>
+      </article>
+      <article class="card">
+        <img src="img/phone-upload.webp" width="1280" height="720" loading="lazy" alt="TV screen showing a QR code, a local address and a six-digit PIN">
+        <h3>Phone upload</h3>
+        <p>Send photos from a phone over your home Wi-Fi. No app and no cloud account.</p>
+      </article>
+      <article class="card">
+        <img src="img/viewer-controls.webp" width="1280" height="720" loading="lazy" alt="Playback controls shown over a painting">
+        <h3>Music shortcuts</h3>
+        <p>Tiles open the YouTube, Spotify and YouTube Music apps already installed on the stick.</p>
+      </article>
+      <article class="card">
+        <img src="img/collections.webp" width="1280" height="720" loading="lazy" alt="Albums screen listing photo collections">
+        <h3>Built for a small stick</h3>
+        <p>Memory and storage are capped for 2 GB RAM and 8 GB storage. See <a href="#limits">Limits</a>.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="download" class="band">
+  <div class="wrap narrow">
+    <h2>Download</h2>
+    <p>MyFrame 1.1.0 is a signed Android APK for Android TV and Google TV.</p>
+    <div class="actions">
+      <a class="btn" href="https://github.com/reaanv/MyFrame/releases/latest/download/MyFrame.apk">Download MyFrame 1.1.0 (APK)</a>
+    </div>
+    <p>Check the file before installing: <a href="https://github.com/reaanv/MyFrame/releases/latest">the SHA-256 is listed on the release page</a>.</p>
+    <p class="note">MyFrame is an Android app. It does not replace Android or flash firmware.</p>
+  </div>
+</section>
+
+<section id="setup">
+  <div class="wrap narrow">
+    <h2>Setup</h2>
+    <ol class="steps">
+      <li><strong>On the stick:</strong> finish Google TV setup and join Wi-Fi.</li>
+      <li><strong>Enable debugging:</strong> open Settings, About, and press the build number seven times. Then turn on debugging in Developer options.</li>
+      <li><strong>Install from a computer with adb:</strong>
+<pre><code>adb connect &lt;stick-ip&gt;:5555
+adb install -r MyFrame.apk</code></pre>
+        <p class="note">Some sticks use Wireless debugging instead. Then use <code>adb pair</code> and <code>adb connect</code> with the addresses shown on the TV.</p>
+      </li>
+      <li><strong>Open MyFrame</strong> from the TV's app row.</li>
+      <li><strong>Optional, make MyFrame the Home screen:</strong> run this from the GitHub repository.
+<pre><code>bash tools/appliance.sh apply</code></pre>
+        <p class="note"><code>bash tools/appliance.sh undo</code> puts the stock launcher back.</p>
+      </li>
+    </ol>
+    <p><a href="https://github.com/reaanv/MyFrame/blob/main/docs/XIAOMI_STICK_SETUP.md">Full setup guide</a></p>
+  </div>
+</section>
+
+<section id="phone-upload" class="band">
+  <div class="wrap split">
+    <div>
+      <h2>Phone upload</h2>
+      <p>On the TV open Photos, Add photos. Scan the QR code with a phone on the same Wi-Fi and type the 6-digit PIN. The page opens at <code>http://&lt;stick-ip&gt;:8080</code>.</p>
+      <div class="callout" role="note">
+        <p><strong>The upload page runs on your stick, inside your home network.</strong> This website cannot reach your stick, and it never sees your photos. Open the address shown on your TV, from a phone on the same Wi-Fi.</p>
+      </div>
+      <p class="note">Guest Wi-Fi or client isolation can block it. Do not forward port 8080 on your router.</p>
+    </div>
+    <figure class="shot">
+      <img src="img/phone-upload.webp" width="1280" height="720" loading="lazy" alt="The Phone upload screen on the TV with a QR code, the address to open and the PIN to enter">
+    </figure>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="wrap narrow">
+    <h2>Limits</h2>
+    <p>These caps leave room for Android and a music app on a 2 GB stick.</p>
+    <table>
+      <tbody>
+        <tr><th scope="row">Full-picture cache</th><td>24 MB</td></tr>
+        <tr><th scope="row">Thumbnail cache</th><td>8 MB</td></tr>
+        <tr><th scope="row">Picture decoding</th><td>Full HD, even on 4K output</td></tr>
+        <tr><th scope="row">New photos</th><td>resized to a 1920-pixel long edge</td></tr>
+        <tr><th scope="row">Storage</th><td>imports stop before the last 1 GB is used</td></tr>
+      </tbody>
+    </table>
+    <h3>Not yet tested</h3>
+    <ul class="plain">
+      <li>Tested on the Android TV emulator (Android 12, 2 GB RAM). Not yet tested on a physical Xiaomi stick.</li>
+      <li>Spotify playing while art is shown is untested on real hardware.</li>
+      <li>YouTube Music on TV runs inside YouTube and may stop when you leave it.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="help" class="band">
+  <div class="wrap narrow">
+    <h2>Help</h2>
+    <ul class="links">
+      <li><a href="https://github.com/reaanv/MyFrame/blob/main/docs/TROUBLESHOOTING.md">Troubleshooting</a></li>
+      <li><a href="https://github.com/reaanv/MyFrame/issues">Report a problem</a></li>
+      <li><a href="https://github.com/reaanv/MyFrame/blob/main/docs/ARTWORK_CREDITS.md">Artwork credits</a></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Paintings: The Metropolitan Museum of Art, Open Access (CC0). Typeface in the app: Cormorant Garamond (SIL OFL 1.1). MyFrame is not affiliated with Samsung, Xiaomi, Google, Spotify or The Met.</p>
+  </div>
+</footer>
+</body>
+</html>

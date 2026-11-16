@@ -1,0 +1,5 @@
+-keepattributes *Annotation*, InnerClasses
+-dontnote kotlinx.serialization.**
+-keepclassmembers class com.myframe.tv.** { *** Companion; }
+-keepclasseswithmembers class com.myframe.tv.** { kotlinx.serialization.KSerializer serializer(...); }
+-dontwarn fi.iki.elonen.**

@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e0d0b">
+<title>MyFrame</title>
+<style>
+:root{--bg:#0e0d0b;--card:#1b1a17;--hi:#2a2723;--text:#f2ede4;--muted:#a7a195;--accent:#c9a66b;--danger:#e08573;--line:rgba(242,237,228,.16)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:env(safe-area-inset-top) 16px 96px}
+h1{font:500 30px/1.1 Georgia,"Times New Roman",serif;margin:22px 0 2px}
+h2{font:600 13px/1 system-ui;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:26px 0 10px}
+p{color:var(--muted);margin:4px 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:0 0 12px}
+button,select,input{font:inherit;color:inherit}
+button{background:var(--hi);border:1px solid var(--line);border-radius:999px;padding:11px 18px;min-height:44px;cursor:pointer}
+button.primary{background:var(--accent);color:#15110a;border-color:var(--accent);font-weight:600}
+button.danger{color:var(--danger);border-color:rgba(224,133,115,.5)}
+button.on{border-color:var(--accent);color:var(--accent)}
+button:disabled{opacity:.45}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+select,input[type=text],input[type=tel]{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;min-height:46px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row>*{flex:1 1 auto}
+label{display:block;color:var(--muted);font-size:14px;margin:10px 0 6px}
+.pin{font-size:28px;letter-spacing:.35em;text-align:center}
+.bar{height:8px;background:var(--bg);border-radius:9px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;background:var(--accent);width:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.grid figure{margin:0;position:relative;aspect-ratio:1;background:var(--hi);border-radius:10px;overflow:hidden;border:2px solid transparent}
+.grid figure.sel{border-color:var(--accent)}
+.grid img{width:100%;height:100%;object-fit:cover;display:block}
+.grid figure.sel::after{content:"✓";position:absolute;top:6px;right:6px;background:var(--accent);color:#15110a;border-radius:50%;width:22px;height:22px;display:grid;place-items:center;font-weight:700;font-size:13px}
+#queue div{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:5px 0;border-bottom:1px solid var(--line)}
+#queue span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ok{color:var(--accent)}.bad{color:var(--danger)}
+#toast{position:fixed;left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));background:var(--hi);border:1px solid var(--accent);border-radius:12px;padding:12px 14px;display:none}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<h1>MyFrame</h1>
+<p id="sub">Send photos to your TV.</p>
+
+<section id="pair" class="card" hidden>
+  <h2 style="margin-top:0">Pair this device</h2>
+  <p>Enter the 6-digit PIN shown on the TV.</p>
+  <input id="pin" class="pin" type="tel" inputmode="numeric" maxlength="6" autocomplete="one-time-code" aria-label="PIN">
+  <div class="row" style="margin-top:12px"><button id="pairBtn" class="primary">Pair</button></div>
+</section>
+
+<main id="app" hidden>
+  <h2>Upload</h2>
+  <div class="card">
+    <label for="target">Add to album</label>
+    <select id="target"></select>
+    <div class="row" style="margin-top:12px">
+      <button class="primary" id="choose">Choose photos</button>
+      <button id="newAlbum">New album</button>
+    </div>
+    <input id="files" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden>
+    <div id="queue" style="margin-top:10px"></div>
+  </div>
+
+  <h2>On the TV</h2>
+  <div class="card">
+    <div class="row">
+      <button data-mode="art">Art</button>
+      <button data-mode="photos">Photos</button>
+      <button data-mode="mixed">Mixed</button>
+    </div>
+    <label for="shown">Album shown in Photos mode</label>
+    <select id="shown"></select>
+    <label for="preset">Mixed preset</label>
+    <select id="preset"></select>
+    <label for="dur">Time per picture</label>
+    <select id="dur"></select>
+    <div class="row" style="margin-top:12px"><button class="primary" id="apply">Show on TV</button></div>
+  </div>
+
+  <h2>Library</h2>
+  <div class="card">
+    <label for="view">Showing</label>
+    <select id="view"></select>
+    <div class="row" style="margin:12px 0">
+      <button id="addTo" disabled>Add to album</button>
+      <button id="del" class="danger" disabled>Delete</button>
+    </div>
+    <div class="row" style="margin-bottom:12px">
+      <button id="rename">Rename album</button>
+      <button id="delAlbum" class="danger">Delete album</button>
+    </div>
+    <div id="grid" class="grid"></div>
+    <p id="empty" hidden>No photos here yet.</p>
+    <div class="row" style="margin-top:12px"><button id="more" hidden>Show more</button></div>
+  </div>
+
+  <h2>Storage</h2>
+  <div class="card">
+    <div class="bar"><i id="used"></i></div>
+    <p id="storage" style="margin:0"></p>
+  </div>
+  <div class="row"><button id="logout">Disconnect this device</button></div>
+</main>
+<div id="toast" role="status"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+let token=localStorage.getItem('mfToken')||'',state=null,mode='photos',sel=new Set(),offset=0,total=0;
+const DUR=[5,10,15,20,30,45,60,120,300,600,900,1800,3600];
+const fmt=s=>s<60?s+' seconds':s<3600?+(s/60).toFixed(1)+' min':+(s/3600).toFixed(1)+' h';
+// A preset may use a time that is not in the standard list (12 s, say). Add it, or the box goes blank and 0 gets sent.
+function setDur(v){v=+v;if(!v)return;const d=$('dur');if(![...d.options].some(o=>+o.value===v)){const o=document.createElement('option');o.value=v;o.textContent=fmt(v);const after=[...d.options].find(x=>+x.value>v);d.insertBefore(o,after||null)}d.value=String(v)}
+const mb=b=>b>=1073741824?(b/1073741824).toFixed(1)+' GB':Math.round(b/1048576)+' MB';
+function toast(t,bad){const e=$('toast');e.textContent=t;e.style.borderColor=bad?'var(--danger)':'var(--accent)';e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',3800)}
+async function api(path,body,raw){
+  const o={headers:{'X-MyFrame-Token':token}};
+  if(body!==undefined){o.method='POST';if(body instanceof FormData)o.body=body;else{o.headers['Content-Type']='application/json';o.body=JSON.stringify(body)}}
+  let r;try{r=await fetch(path,o)}catch(e){throw new Error('The TV cannot be reached. Check that it is on and on the same Wi-Fi.')}
+  if(r.status===401){showPair();throw new Error('Please pair again.')}
+  if(raw)return r;
+  const j=await r.json().catch(()=>({ok:false,error:'bad_response'}));
+  if(!r.ok||!j.ok)throw Object.assign(new Error(MSG[j.error]||j.error||'Something went wrong.'),{data:j});
+  return j;
+}
+// The TV accepts 500 ids per request, so large selections go in several requests.
+async function bulk(path,ids,extra){for(let i=0;i<ids.length;i+=400)await api(path,Object.assign({ids:ids.slice(i,i+400)},extra))}
+const MSG={too_many:'Too many photos selected at once.',bad_pin:'That PIN is not right.',locked:'Too many tries. Wait a minute and try again.',too_large:'That file is too large (40 MB limit).',unsupported_type:'Only JPEG, PNG and WebP pictures can be added.',no_space:'MyFrame keeps 1 GB free for Android and music. Remove unwanted photos or apps, then try again.',system_collection:'This album cannot be changed.',name_required:'Please enter a name.',local_network_only:'Only devices on the home network can connect.'};
+function showPair(){token='';localStorage.removeItem('mfToken');$('app').hidden=true;$('pair').hidden=false;$('pin').value='';$('pin').focus()}
+$('pairBtn').onclick=async()=>{
+  try{const r=await fetch('/api/pair',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:$('pin').value,name:(navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||'Phone'})});
+    const j=await r.json();
+    if(!j.ok){toast(j.error==='bad_pin'?`That PIN is not right. ${j.remaining} tries left.`:(MSG[j.error]||'Could not pair.'),true);return}
+    token=j.token;localStorage.setItem('mfToken',token);start()}catch(e){toast('The TV cannot be reached.',true)}
+};
+$('pin').addEventListener('keydown',e=>{if(e.key==='Enter')$('pairBtn').click()});
+function fill(sel,items,value){sel.innerHTML='';for(const [v,t] of items){const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o)}if(value!==undefined)sel.value=String(value)}
+async function refresh(){
+  state=await api('/api/state');
+  const albums=state.collections.map(c=>[c.id,`${c.name} (${c.count})`]);
+  const keepT=$('target').value,keepV=$('view').value;
+  fill($('target'),[[0,'Library only (no album)'],...albums],keepT||0);
+  fill($('view'),[[0,`All photos (${state.counts.photos})`],...albums],keepV||0);
+  fill($('shown'),[[0,'All photos'],...albums],state.display.photosCollectionId);
+  fill($('preset'),state.presets.filter(p=>!p.builtin&&p.name!=='Collection player').map(p=>[p.id,p.name]));
+  fill($('dur'),DUR.map(d=>[d,fmt(d)]));setDur(state.display.photosDurationSec);
+  const s=state.storage,used=s.totalBytes-s.freeBytes;
+  $('used').style.width=Math.min(100,100*used/s.totalBytes)+'%';
+  $('storage').textContent=`${mb(s.freeBytes)} free of ${mb(s.totalBytes)}. Your photos use ${mb(s.libraryBytes)}.`;
+  $('sub').textContent=`Connected to ${state.device.model||'your TV'}.`;
+  setMode(mode);
+}
+function setMode(m){mode=m;document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));
+  $('shown').disabled=m!=='photos';$('preset').disabled=m!=='mixed';
+  const p=state&&state.presets.find(x=>m==='mixed'?String(x.id)===$('preset').value:x.builtin===m);if(p)setDur(p.durationSec)}
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+$('preset').onchange=()=>setMode('mixed');
+$('apply').onclick=async()=>{try{
+  const body={mode};if(+$('dur').value)body.durationSec=+$('dur').value;
+  if(mode==='photos')body.collectionId=+$('shown').value;
+  if(mode==='mixed'){if(!$('preset').value){toast('There is no mixed preset yet. Create one on the TV.',true);return}body.presetId=+$('preset').value}
+  await api('/api/display',body);toast('Showing on the TV.');refresh()}catch(e){toast(e.message,true)}};
+// Blob URLs hold the picture in the phone's memory until released, so each is freed as soon as it has been drawn.
+async function thumb(img,id,g){try{const r=await api('/api/thumb/'+id,undefined,true);if(!r.ok||g!==gen)return;const u=URL.createObjectURL(await r.blob());if(g!==gen){URL.revokeObjectURL(u);return}
+  live.add(u);img.onload=img.onerror=()=>{if(live.delete(u))URL.revokeObjectURL(u)};img.src=u}catch(e){}}
+// gen numbers each grid load. An answer that arrives after the user has moved to another album is thrown away.
+let gen=0,loading=false;const live=new Set();
+async function loadGrid(reset){
+  if(!reset&&loading)return;
+  if(reset){gen++;live.forEach(u=>URL.revokeObjectURL(u));live.clear();offset=0;sel.clear();$('grid').innerHTML='';updateSel()}
+  const g=gen,album=+$('view').value;loading=true;$('more').disabled=true;
+  let j;try{j=await api(`/api/photos?collection=${album}&offset=${offset}&limit=60`)}finally{if(g===gen){loading=false;$('more').disabled=false}}
+  if(g!==gen)return;
+  total=j.total;offset+=j.items.length;
+  for(const it of j.items){const f=document.createElement('figure');const img=document.createElement('img');img.alt=it.name;img.loading='lazy';f.appendChild(img);
+    f.tabIndex=0;f.setAttribute('role','checkbox');f.setAttribute('aria-checked','false');
+    const tog=()=>{sel.has(it.id)?sel.delete(it.id):sel.add(it.id);f.classList.toggle('sel',sel.has(it.id));f.setAttribute('aria-checked',sel.has(it.id));updateSel()};
+    f.onclick=tog;f.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();tog()}};
+    $('grid').appendChild(f);thumb(img,it.id,g)}
+  $('empty').hidden=total>0;$('more').hidden=offset>=total;
+  const info=state.collections.find(c=>c.id===album);
+  $('rename').hidden=$('delAlbum').hidden=!album||!info||info.system;
+}
+function updateSel(){const n=sel.size;$('del').disabled=$('addTo').disabled=!n;$('del').textContent=n?`Delete ${n}`:'Delete';$('addTo').textContent=n?`Add ${n} to album`:'Add to album'}
+$('view').onchange=()=>loadGrid(true).catch(e=>toast(e.message,true));
+$('more').onclick=()=>loadGrid(false).catch(e=>toast(e.message,true));
+$('del').onclick=async()=>{if(!confirm(`Delete ${sel.size} photos from the TV? This cannot be undone. The originals on your phone are not affected.`))return;
+  try{await bulk('/api/photos/delete',[...sel]);toast('Deleted.');await refresh();await loadGrid(true)}catch(e){toast(e.message,true)}};
+$('addTo').onclick=async()=>{const names=state.collections.map((c,i)=>`${i+1}. ${c.name}`).join('\n');const n=prompt('Add to which album? Enter its number:\n'+names);const c=state.collections[+n-1];if(!c)return;
+  try{await bulk(`/api/collections/${c.id}/items`,[...sel],{action:'add'});toast(`Added to ${c.name}.`);await refresh();await loadGrid(true)}catch(e){toast(e.message,true)}};
+$('newAlbum').onclick=async()=>{const name=prompt('Name for the new album (for example Family, Holidays, Travel):');if(!name)return;
+  try{const j=await api('/api/collections',{name});await refresh();$('target').value=String(j.id);toast('Album created.')}catch(e){toast(e.message,true)}};
+$('rename').onclick=async()=>{const id=+$('view').value,name=prompt('New name for this album:');if(!id||!name)return;
+  try{await api(`/api/collections/${id}/rename`,{name});await refresh();toast('Renamed.')}catch(e){toast(e.message,true)}};
+$('delAlbum').onclick=async()=>{const id=+$('view').value;if(!id||!confirm('Delete this album? The photos stay in your library.'))return;
+  try{await api(`/api/collections/${id}/delete`,{});$('view').value='0';await refresh();await loadGrid(true);toast('Album deleted.')}catch(e){toast(e.message,true)}};
+$('choose').onclick=()=>$('files').click();
+$('files').onchange=async e=>{
+  const files=[...e.target.files];e.target.value='';if(!files.length)return;
+  const q=$('queue');q.innerHTML='';const target=+$('target').value;let done=0;
+  const rows=files.map(f=>{const d=document.createElement('div');d.innerHTML='<span></span><span>Waiting</span>';d.firstChild.textContent=f.name;q.appendChild(d);return d.lastChild});
+  $('choose').disabled=true;
+  // One file per request: a dropped connection only loses the photo in flight, never the whole batch.
+  for(let i=0;i<files.length;i++){const f=files[i],st=rows[i];
+    if(f.size>state.limits.maxUploadBytes){st.textContent='Too large';st.className='bad';continue}
+    st.textContent='Sending…';const fd=new FormData();fd.append('file',f,f.name);
+    try{const j=await api('/api/upload?collection='+target,fd);st.textContent=j.duplicate?'Already on the TV':'Added';st.className='ok';done++}
+    catch(err){st.textContent=err.message;st.className='bad'}}
+  $('choose').disabled=false;toast(`${done} of ${files.length} photos sent.`,done<files.length);
+  try{await refresh();await loadGrid(true)}catch(e){}
+};
+$('logout').onclick=async()=>{try{await api('/api/logout',{})}catch(e){}showPair()};
+async function start(){try{await refresh();$('pair').hidden=true;$('app').hidden=false;await loadGrid(true)}catch(e){if(token)toast(e.message,true);showPair()}}
+token?start():showPair();
+</script>
+</body>
+</html>

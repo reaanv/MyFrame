@@ -1,0 +1,365 @@
+{
+  "info": {
+    "name": "MyFrame local upload smoke",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Local emulator/stick contract checks. Start Phone upload and adb forward first. Uses only synthetic fixture files; no cloud credentials. The uploaded fixture remains in My Photos for visual verification."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8080"
+    },
+    {
+      "key": "pin",
+      "value": ""
+    },
+    {
+      "key": "photoFile",
+      "value": "build/stick-smoke-photo.jpg"
+    },
+    {
+      "key": "badFile",
+      "value": "build/stick-smoke-invalid.jpg"
+    }
+  ],
+  "item": [
+    {
+      "name": "Pairing page",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/",
+        "header": []
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Phone page loads\",()=>pm.response.to.have.status(200));",
+              "pm.test(\"Storage reserve guidance is present\",()=>pm.expect(pm.response.text()).to.include(\"keeps 1 GB free\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Protected state requires pairing",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/state",
+        "header": []
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Unpaired access rejected\",()=>pm.response.to.have.status(401));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Incorrect PIN is rejected",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/pair",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"pin\":\"not-a-pin\",\"name\":\"Smoke test\"}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Incorrect PIN rejected\",()=>pm.response.to.have.status(403));",
+              "pm.test(\"Error contract\",()=>pm.expect(pm.response.json().error).to.eql(\"bad_pin\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pair with TV PIN",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/pair",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"pin\":\"{{pin}}\",\"name\":\"Local smoke test\"}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Pair succeeds\",()=>pm.response.to.have.status(200));",
+              "const b=pm.response.json(); pm.test(\"Session token issued\",()=>pm.expect(b.token).to.be.a(\"string\").and.not.empty); pm.collectionVariables.set(\"token\",b.token);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stick storage and upload limits",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/state",
+        "header": [
+          {
+            "key": "X-MyFrame-Token",
+            "value": "{{token}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"State succeeds\",()=>pm.response.to.have.status(200));",
+              "const b=pm.response.json(); pm.test(\"1 GB reserve\",()=>pm.expect(b.storage.reserveBytes).to.eql(1073741824));",
+              "pm.test(\"40 MB upload contract\",()=>pm.expect(b.limits.maxUploadBytes).to.eql(41943040));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cookie alone cannot change state",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/photos/favorite",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"ids\":[],\"favorite\":true}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Header token required\",()=>pm.response.to.have.status(401));",
+              "pm.test(\"POST closes the connection safely\",()=>pm.expect(pm.response.headers.get(\"Connection\").toLowerCase()).to.eql(\"close\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Upload synthetic large photo",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/upload",
+        "header": [
+          {
+            "key": "X-MyFrame-Token",
+            "value": "{{token}}"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "{{photoFile}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Photo accepted\",()=>pm.response.to.have.status(200));",
+              "const b=pm.response.json(); pm.test(\"Photo ID returned\",()=>pm.expect(b.id).to.be.a(\"number\")); pm.collectionVariables.set(\"photoId\",b.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Duplicate upload",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/upload",
+        "header": [
+          {
+            "key": "X-MyFrame-Token",
+            "value": "{{token}}"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "{{photoFile}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Duplicate is accepted without storing twice\",()=>{pm.response.to.have.status(200); pm.expect(pm.response.json().duplicate).to.eql(true); pm.expect(String(pm.response.json().id)).to.eql(String(pm.collectionVariables.get(\"photoId\")));});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Optimised photo appears in library",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/photos",
+        "header": [
+          {
+            "key": "X-MyFrame-Token",
+            "value": "{{token}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Photo library succeeds\",()=>pm.response.to.have.status(200));",
+              "const photo=pm.response.json().items.find(x=>String(x.id)===String(pm.collectionVariables.get(\"photoId\")));",
+              "pm.test(\"Imported image fits 1920-pixel long edge\",()=>{pm.expect(photo).to.exist; pm.expect(Math.max(photo.width,photo.height)).to.be.at.most(1920);});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reject fake photo",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/upload",
+        "header": [
+          {
+            "key": "X-MyFrame-Token",
+            "value": "{{token}}"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "{{badFile}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Fake image rejected\",()=>pm.response.to.have.status(415));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Logout revokes token",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/logout",
+        "header": [
+          {
+            "key": "X-MyFrame-Token",
+            "value": "{{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Logout succeeds\",()=>pm.response.to.have.status(200));",
+              "pm.test(\"POST closes the connection safely\",()=>pm.expect(pm.response.headers.get(\"Connection\").toLowerCase()).to.eql(\"close\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Revoked token denied",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/state",
+        "header": [
+          {
+            "key": "X-MyFrame-Token",
+            "value": "{{token}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Logged-out session rejected\",()=>pm.response.to.have.status(401));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
