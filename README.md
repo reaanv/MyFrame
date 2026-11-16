@@ -26,6 +26,8 @@ Android and it does not flash firmware. It has no ads, no account and no subscri
 - **Mixed.** Paintings and photos together, saved as editable presets.
 - **Phone upload.** Scan a QR code on the TV, enter the PIN, and send photos from a phone over home Wi-Fi.
 - **Music and apps.** Tiles open the installed YouTube, Spotify and YouTube Music apps, and an All Apps list.
+  MyFrame does not bundle these apps. When one is missing, its tile says "Not installed" and OK offers a button
+  that opens the app's Google Play page.
 - **Small-stick limits.** Picture caches and decode sizes are capped so Android and a music app keep their memory.
 - **Optional:** Home-launcher mode, start on boot, and system screensaver.
 

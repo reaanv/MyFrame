@@ -3,6 +3,19 @@
 Last updated 2026-11-16. "Tested" means observed on the Android TV emulator (API 31, x86, 1080p, 2 GB RAM) or in
 JVM unit tests. Nothing has run on the physical Xiaomi stick yet; its exact generation/firmware is unknown.
 
+## MyFrame 1.1.1: missing music apps
+
+- Spotify, YouTube and YT Music tiles check whether the app is installed (rechecked when MyFrame returns to the front).
+  A missing app's tile reads "Not installed. Press OK to get it from the Play Store." OK opens a dialog whose
+  **Open Play Store** button opens the app's Google Play page (`market://`, then `https://` as a fallback).
+  If no store opens, the home screen says to open the Play Store and search for the app.
+- MyFrame does not bundle or install these apps: they are other companies' proprietary software, and Android does not
+  let one app silently install another. The Play Store handles download, signing and updates.
+- Verified on the emulator (release build, library preserved by `install -r`): the Spotify tile shows the message,
+  the dialog appears with focus on Cancel, and **Open Play Store** brought Google Play to the front. The emulator's
+  Play Store is not signed in, so the Spotify listing itself and an actual install were not shown.
+- 42 JVM unit tests pass. Version code 3, same release key.
+
 ## Published (2026-11-16)
 
 - Source: <https://github.com/reaanv/MyFrame> (public, branch `main`). The repository holds no keystore,
@@ -11,7 +24,7 @@ JVM unit tests. Nothing has run on the physical Xiaomi stick yet; its exact gene
   The public download was fetched back and its SHA-256 matched the local file. Signature verified with `apksigner`
   (APK Signature Scheme v2).
 - Site: <https://myframe-seven.vercel.app> (Vercel project `myframe`, root directory `site/`, deploys on every push
-  to `main`). Checked in a browser at 390 px and 1440 px. It is a download and setup page only: it cannot reach
+  to `main`). Next.js 16 static export with shadcn/ui (Base UI), Motion and Lucide; see `site/`. Checked in a browser at 390 px and 1440 px. It is a download and setup page only: it cannot reach
   a stick on a private network, and it says so.
 - CI: `.github/workflows/ci.yml` runs the unit tests and builds a debug APK on push and pull request.
 - Local history before publication is kept on the unpublished branch `legacy-local`.
