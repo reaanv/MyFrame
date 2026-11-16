@@ -3,6 +3,25 @@
 Last updated 2026-11-16. "Tested" means observed on the Android TV emulator (API 31, x86, 1080p, 2 GB RAM) or in
 JVM unit tests. Nothing has run on the physical Xiaomi stick yet; its exact generation/firmware is unknown.
 
+## Published (2026-11-16)
+
+- Source: <https://github.com/reaanv/MyFrame> (public, branch `main`). The repository holds no keystore,
+  no `keystore.properties`, no APK and no personal photos; `.gitignore` excludes them.
+- Release: <https://github.com/reaanv/MyFrame/releases/tag/v1.1.0> with the signed `MyFrame.apk` and its SHA-256.
+  The public download was fetched back and its SHA-256 matched the local file. Signature verified with `apksigner`
+  (APK Signature Scheme v2).
+- Site: <https://myframe-seven.vercel.app> (Vercel project `myframe`, root directory `site/`, deploys on every push
+  to `main`). Checked in a browser at 390 px and 1440 px. It is a download and setup page only: it cannot reach
+  a stick on a private network, and it says so.
+- CI: `.github/workflows/ci.yml` runs the unit tests and builds a debug APK on push and pull request.
+- Local history before publication is kept on the unpublished branch `legacy-local`.
+
+## Blocked: needs the physical stick
+
+No Xiaomi stick was connected (only the emulator), so these remain unverified: exact model and firmware,
+install on hardware, Home / boot / undo on hardware, and Spotify or YouTube Music playing while art is shown.
+Use `docs/HARDWARE_CHECKLIST.md` when the stick is available.
+
 ## MyFrame 1.1.0: Xiaomi 2 GB / 8 GB changes
 
 - Release/debug builds and 42 JVM unit tests pass. Version code 2; original release signing key retained.
@@ -70,7 +89,7 @@ JVM unit tests. Nothing has run on the physical Xiaomi stick yet; its exact gene
 ```bash
 export JAVA_HOME="C:/Program Files/Android/Android Studio/jbr" ANDROID_HOME="$LOCALAPPDATA/Android/Sdk"
 ./gradlew :app:testDebugUnitTest :app:assembleDebug :app:assembleRelease
-cp app/build/outputs/apk/release/app-release.apk dist/MyFrame.apk
+mkdir -p dist && cp app/build/outputs/apk/release/app-release.apk dist/MyFrame.apk   # dist/ is git-ignored
 bash tools/tv.sh key right ok back     # drive the emulator remote
 bash tools/tv.sh texts                 # visible text + focus
 bash tools/appliance.sh list|apply|undo

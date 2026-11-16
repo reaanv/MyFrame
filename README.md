@@ -8,6 +8,7 @@ Android TV / Google TV stick with 2 GB RAM and 8 GB storage, and runs on Android
 ![MyFrame home screen](docs/screenshots/01_home.png)
 
 **[Download the latest APK](https://github.com/reaanv/MyFrame/releases/latest)** ·
+[Website](https://myframe-seven.vercel.app) ·
 [Setup guide](docs/XIAOMI_STICK_SETUP.md) · [Troubleshooting](docs/TROUBLESHOOTING.md)
 
 MyFrame is an Android app. It can become the Home screen and the screensaver, but it does not replace
