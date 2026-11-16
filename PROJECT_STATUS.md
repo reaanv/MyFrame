@@ -3,7 +3,7 @@
 Last updated 2026-11-16. "Tested" means observed on the Android TV emulator (API 31, x86, 1080p, 2 GB RAM) or in
 JVM unit tests. Nothing has run on the physical Xiaomi stick yet; its exact generation/firmware is unknown.
 
-## MyFrame 1.1.1: missing music apps
+## MyFrame 1.1.2: missing music apps
 
 - Spotify, YouTube and YT Music tiles check whether the app is installed (rechecked when MyFrame returns to the front).
   A missing app's tile reads "Not installed. Press OK to get it from the Play Store." OK opens a dialog whose
@@ -14,7 +14,9 @@ JVM unit tests. Nothing has run on the physical Xiaomi stick yet; its exact gene
 - Verified on the emulator (release build, library preserved by `install -r`): the Spotify tile shows the message,
   the dialog appears with focus on Cancel, and **Open Play Store** brought Google Play to the front. The emulator's
   Play Store is not signed in, so the Spotify listing itself and an actual install were not shown.
-- 42 JVM unit tests pass. Version code 3, same release key.
+- 1.1.2 checks installed apps with the same Leanback-first lookup used to open them, so a TV-only app is never
+  shown as missing. Rechecked on the emulator: YouTube installed, Spotify missing, YT Music via YouTube.
+- 42 JVM unit tests pass. Version code 4, same release key.
 
 ## Published (2026-11-16)
 

@@ -1,5 +1,5 @@
 // Every fact on the site comes from here. Keep it in step with the app and PROJECT_STATUS.md.
-export const VERSION = "1.1.1"
+export const VERSION = "1.1.2"
 export const REPO = "https://github.com/reaanv/MyFrame"
 export const APK_URL = `${REPO}/releases/latest/download/MyFrame.apk`
 export const RELEASE_URL = `${REPO}/releases/latest`

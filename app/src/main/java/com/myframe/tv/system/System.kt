@@ -50,8 +50,7 @@ object Apps {
     }
 
     fun launch(context: Context, pkg: String): Boolean {
-        val pm = context.packageManager
-        val intent = pm.getLeanbackLaunchIntentForPackage(pkg) ?: pm.getLaunchIntentForPackage(pkg) ?: return false
+        val intent = launchIntent(context, pkg) ?: return false
         return runCatching { context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }.isSuccess
     }
 
@@ -64,8 +63,13 @@ object Apps {
     val SPOTIFY_STORE = Missing("Spotify", "com.spotify.tv.android")
     val YOUTUBE_STORE = Missing("YouTube", "com.google.android.youtube.tv")
 
-    fun isInstalled(context: Context, packages: List<String>): Boolean =
-        packages.any { runCatching { context.packageManager.getLaunchIntentForPackage(it) != null }.getOrDefault(false) }
+    /** Same lookup as [launch]: a TV-only app may have a Leanback entry and no phone-style launcher entry. */
+    private fun launchIntent(context: Context, pkg: String): Intent? {
+        val pm = context.packageManager
+        return runCatching { pm.getLeanbackLaunchIntentForPackage(pkg) ?: pm.getLaunchIntentForPackage(pkg) }.getOrNull()
+    }
+
+    fun isInstalled(context: Context, packages: List<String>): Boolean = packages.any { launchIntent(context, it) != null }
 
     fun spotifyInstalled(context: Context) = isInstalled(context, SPOTIFY)
     fun youTubeInstalled(context: Context) = isInstalled(context, YOUTUBE)
